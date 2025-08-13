@@ -1,0 +1,67 @@
+// src/App.jsx
+import { Routes, Route, Navigate } from "react-router-dom";
+import ProtectedRoute from "./routes/ProtectedRoute.jsx";
+import PublicRoute from "./routes/PublicRoute";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Dashboard from "./pages/Dashboard.jsx";
+import Unauthorized from "./pages/Unauthorized";
+import AdminPanel from "./pages/AdminPanel.jsx";
+import Layout from "./components/Layout.jsx";
+import { Toaster } from "react-hot-toast";
+
+export default function App() {
+  return (
+    <Layout>
+      <Toaster
+        position="top-center"
+        toastOptions={{
+          style: {
+            fontSize: "1.1rem",
+            padding: "12px 20px",
+            minWidth: "320px",
+            background: "black",
+            color: "white",
+            border: "0.5px solid gray",
+          },
+          success: {
+            style: {
+              background: "black",
+              color: "white",
+              border: "0.5px solid green",
+            },
+          },
+          error: {
+            style: {
+              background: "black",
+              color: "white",
+              border: "0.5px solid red",
+            },
+          },
+        }}
+      />
+      <Routes>
+        {/* Public routes */}
+        <Route element={<PublicRoute />}>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+        </Route>
+
+        {/* Protected routes */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="/dashboard" element={<Dashboard />} />
+        </Route>
+
+        <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
+          <Route path="/admin" element={<AdminPanel />} />
+        </Route>
+
+        {/* Unauthorized page */}
+        <Route path="/unauthorized" element={<Unauthorized />} />
+
+        {/* Fallback */}
+        <Route path="*" element={<Navigate to="/dashboard" />} />
+      </Routes>
+    </Layout>
+  );
+}
