@@ -14,9 +14,9 @@ import {
 export const sidebarMenuConfig = {
   admin: [
     { label: "Dashboard", icon: LayoutDashboard, path: "/dashboard" },
-    { label: "Faculty Management", icon: Users2Icon, path: "/faculty/create" },
-    { label: "Course Management", icon: Book, path: "/faculty" },
-    { label: "Assignment", icon: Link, path: "/courses/create" },
+    { label: "Faculty Management", icon: Users2Icon, path: "/faculty" },
+    { label: "Course Management", icon: Book, path: "/course" },
+    { label: "Assignment", icon: Link, path: "/courses" },
   ],
   student: [
     { label: "Dashboard", icon: LayoutDashboard, path: "/dashboard" },

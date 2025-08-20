@@ -9,59 +9,72 @@ import Unauthorized from "./pages/Unauthorized";
 import AdminPanel from "./pages/AdminPanel.jsx";
 import Layout from "./components/Layout.jsx";
 import { Toaster } from "react-hot-toast";
+import FacultyManagement from "./pages/FacultyManagement.jsx";
+import { Helmet } from "react-helmet";
 
 export default function App() {
   return (
-    <Layout>
-      <Toaster
-        position="top-center"
-        toastOptions={{
-          style: {
-            fontSize: "1.1rem",
-            padding: "12px 20px",
-            minWidth: "320px",
-            background: "black",
-            color: "white",
-            border: "0.5px solid gray",
-          },
-          success: {
+    <>
+      <Helmet>
+        <title>Time Table Generator</title>
+        <meta
+          name="description"
+          content="A web application for generating time tables."
+        />
+      </Helmet>
+      <Layout>
+        <Toaster
+          position="top-center"
+          toastOptions={{
             style: {
+              fontSize: "1.1rem",
+              padding: "12px 20px",
+              minWidth: "320px",
+              maxWidth: "100%",
               background: "black",
               color: "white",
-              border: "0.5px solid green",
+              border: "0.5px solid gray",
             },
-          },
-          error: {
-            style: {
-              background: "black",
-              color: "white",
-              border: "0.5px solid red",
+            success: {
+              style: {
+                background: "black",
+                color: "white",
+                border: "0.5px solid green",
+              },
             },
-          },
-        }}
-      />
-      <Routes>
-        {/* Public routes */}
-        <Route element={<PublicRoute />}>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-        </Route>
+            error: {
+              style: {
+                background: "black",
+                color: "white",
+                border: "0.5px solid red",
+              },
+            },
+            duration: 5000, // 5 seconds
+          }}
+        />
+        <Routes>
+          {/* Public routes */}
+          <Route element={<PublicRoute />}>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+          </Route>
 
-        {/* Protected routes */}
-        <Route element={<ProtectedRoute />}>
-          <Route path="/dashboard" element={<Dashboard />} />
-        </Route>
+          {/* Protected routes */}
+          <Route element={<ProtectedRoute />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+          </Route>
 
-        <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
-          <Route path="/admin" element={<AdminPanel />} />
-        </Route>
+          <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
+            <Route path="/faculty" element={<FacultyManagement />} />
+          </Route>
 
-        {/* Unauthorized page */}
-        <Route path="/unauthorized" element={<Unauthorized />} />
+          {/* Unauthorized page */}
+          <Route path="/unauthorized" element={<Unauthorized />} />
 
-        {/* Fallback */}
-        <Route path="*" element={<Navigate to="/dashboard" />} />
-      </Routes>
-    </Layout>
+          {/* Fallback */}
+          <Route path="*" element={<Navigate to="/dashboard" />} />
+        </Routes>
+      </Layout>
+    </>
   );
 }
