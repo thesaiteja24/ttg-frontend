@@ -1,37 +1,36 @@
 import { create } from "zustand";
 import {
-  getAllFaculty,
-  createFaculty,
-  updateFaculty,
-  deleteFaculty,
-} from "../services/faculty.service";
+  createCourse,
+  deleteCourse,
+  getAllCourses,
+  updateCourse,
+} from "../services/course.service";
 
 const initialState = {
-  facultyList: [],
+  courseList: [],
   isLoading: false,
   error: null,
-  selectedFaculty: null,
+  selectedCourse: null,
 };
 
-export const useFacultyStore = create((set) => ({
+export const useCourseStore = create((set) => ({
   ...initialState,
 
-  getFaculty: async () => {
-    set({ isLoading: true, error: null });
-
+  getCourses: async () => {
+    set({ isLoading: true });
     try {
-      const res = await getAllFaculty();
+      const res = await getAllCourses();
 
       if (res.success) {
         set({
-          facultyList: res.data,
+          courseList: res.data,
           isLoading: false,
           error: null,
         });
       } else {
         set({
           isLoading: false,
-          error: res.message || "Failed to fetch faculty",
+          error: res.message || "Failed to fetch courses",
         });
       }
 
@@ -59,16 +58,16 @@ export const useFacultyStore = create((set) => ({
     }
   },
 
-  addFaculty: async (payload) => {
+  createCourse: async (payload) => {
     set({ isLoading: true, error: null });
 
     try {
-      const res = await createFaculty(payload);
+      const res = await createCourse(payload);
 
       if (res.success) {
-        // Add the new faculty to the list
+        // Add the new course to the list
         set((state) => ({
-          facultyList: [],
+          courseList: [],
           isLoading: false,
           error: null,
         }));
@@ -103,16 +102,16 @@ export const useFacultyStore = create((set) => ({
     }
   },
 
-  updateFaculty: async (payload) => {
+  updateCourse: async (payload) => {
     set({ isLoading: true, error: null });
 
     try {
-      const res = await updateFaculty(payload);
+      const res = await updateCourse(payload);
 
       if (res.success) {
-        // Update the faculty in the list
+        // Update the course in the list
         set((state) => ({
-          facultyList: [],
+          courseList: [],
           isLoading: false,
           error: null,
         }));
@@ -147,13 +146,13 @@ export const useFacultyStore = create((set) => ({
     }
   },
 
-  deleteFaculty: async (id) => {
+  deleteCourse: async (id) => {
     set({ isLoading: true, error: null });
     try {
-      const res = await deleteFaculty(id);
+      const res = await deleteCourse(id);
       if (res.success) {
         set((state) => ({
-          facultyList: [],
+          courseList: [],
           isLoading: false,
           error: null,
         }));
@@ -188,8 +187,8 @@ export const useFacultyStore = create((set) => ({
     }
   },
 
-  setSelectedFaculty: (faculty) => {
-    set({ selectedFaculty: faculty });
+  setSelectedCourse: (course) => {
+    set({ selectedCourse: course });
   },
 
   reset: () => {

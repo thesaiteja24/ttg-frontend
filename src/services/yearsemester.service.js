@@ -1,10 +1,12 @@
 import api from "./api";
-import { FACULTY_URL as facultyURl } from "../constants";
+import { YEAR_SEMESTER_URL as year_semester_url } from "../constants";
 import { handleApiResponse } from "../utils/handleApiResponse";
 
-export const getAllFaculty = async () => {
+export const getYearSemesters = async (isDropdown) => {
   try {
-    const response = await api.get(facultyURl);
+    const response = await api.get(year_semester_url, {
+      params: { isDropdown },
+    });
     return handleApiResponse(response);
   } catch (error) {
     const errData = error.response?.data;
@@ -16,9 +18,9 @@ export const getAllFaculty = async () => {
   }
 };
 
-export const createFaculty = async (payload) => {
+export const createYearSemester = async (payload) => {
   try {
-    const response = await api.post(facultyURl, payload);
+    const response = await api.post(year_semester_url, payload);
     return handleApiResponse(response);
   } catch (error) {
     const errData = error.response?.data;
@@ -30,9 +32,9 @@ export const createFaculty = async (payload) => {
   }
 };
 
-export const updateFaculty = async (payload) => {
+export const updateYearSemester = async (payload) => {
   try {
-    const response = await api.put(facultyURl, payload);
+    const response = await api.put(year_semester_url, payload);
     return handleApiResponse(response);
   } catch (error) {
     const errData = error.response?.data;
@@ -44,9 +46,9 @@ export const updateFaculty = async (payload) => {
   }
 };
 
-export const deleteFaculty = async (id) => {
+export const deleteYearSemester = async (id) => {
   try {
-    const response = await api.delete(`${facultyURl}/${id}`);
+    const response = await api.delete(`${year_semester_url}/${id}`);
     return handleApiResponse(response);
   } catch (error) {
     const errData = error.response?.data;

@@ -5,7 +5,7 @@ import { sidebarMenuConfig } from "../config/sidebarMenu.config";
 import { useAuthStore } from "../store/auth.slice";
 
 const Sidebar = () => {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
 
   const logout = useAuthStore((state) => state.logout);
   const isLoading = useAuthStore((state) => state.isLoading);

@@ -13,12 +13,12 @@ import {
 import { DataGrid } from "@mui/x-data-grid";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
-import DeleteIcon from "@mui/icons-material/Delete"; // use MUI’s delete icon
-import { useFacultyStore } from "../store/faculty.slice";
-import CreateFaculty from "../components/CreateFaculty";
-import EditFaculty from "../components/EdiFaculty";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { toast } from "react-hot-toast";
-import { set } from "zod";
+
+import { useYearSemesterStore } from "../store/yearsemester.slice";
+import CreateYearSemester from "../components/CreateYearSemester";
+import EditYearSemester from "../components/EditYearSemester";
 
 const darkTheme = createTheme({
   palette: {
@@ -26,70 +26,79 @@ const darkTheme = createTheme({
   },
 });
 
-const FacultyManagement = () => {
+const YearSemesterManagement = () => {
   const {
     isLoading,
-    facultyList,
-    getFaculty,
-    setSelectedFaculty,
-    deleteFaculty,
-  } = useFacultyStore();
+    yearSemestersList,
+    getYearSemesters,
+    setSelectedYearSemester,
+    deleteYearSemester,
+  } = useYearSemesterStore();
 
   const [pageSize, setPageSize] = useState(10);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [facultyToDelete, setFacultyToDelete] = useState(null);
+  const [yearSemesterToDelete, setYearSemesterToDelete] = useState(null);
 
   useEffect(() => {
-    if (facultyList.length === 0) getFaculty();
-  }, [facultyList, getFaculty]);
+    if (yearSemestersList.length === 0) getYearSemesters();
+  }, [yearSemestersList, getYearSemesters]);
 
   const handleCreate = () => setCreateDialogOpen(true);
 
-  const handleEdit = (faculty) => {
-    setSelectedFaculty(faculty);
+  const handleEdit = (yearSemester) => {
+    setSelectedYearSemester(yearSemester);
     setEditDialogOpen(true);
   };
 
-  const handleDelete = (faculty) => {
-    setFacultyToDelete(faculty);
+  const handleDelete = (yearSemester) => {
+    setYearSemesterToDelete(yearSemester);
     setDeleteDialogOpen(true);
   };
 
   const confirmDelete = async () => {
-    if (!facultyToDelete) return;
+    if (!yearSemesterToDelete) return;
 
     await toast
-      .promise(deleteFaculty(facultyToDelete._id), {
-        loading: "Deleting faculty...",
+      .promise(deleteYearSemester(yearSemesterToDelete._id), {
+        loading: "Deleting Year-Semester...",
         success: (res) => {
           if (res?.success)
-            return res.message || "Faculty deleted successfully!";
-          throw new Error(res?.message || "Failed to delete faculty.");
+            return res.message || "Year-Semester deleted successfully!";
+          throw new Error(res?.message || "Failed to delete Year-Semester.");
         },
-        error: (err) => err.message || "Failed to delete faculty.",
+        error: (err) => err.message || "Failed to delete Year-Semester.",
       })
       .then((response) => {
         if (response.success) {
           setDeleteDialogOpen(false);
-          setFacultyToDelete(null);
+          setYearSemesterToDelete(null);
         }
       });
   };
 
   const columns = [
-    { field: "name", headerName: "Name", flex: 2 },
+    { field: "branch", headerName: "Branch", flex: 1 },
+    { field: "year", headerName: "Year", flex: 0.5 },
+    { field: "semester", headerName: "Semester", flex: 0.5 },
     {
-      field: "phone",
-      headerName: "Phone",
+      field: "sections",
+      headerName: "Sections",
       flex: 1,
-      renderCell: (params) => `+${params.row.countryCode} ${params.row.phone}`,
+      valueGetter: (value, row) => row.sections.join(", "),
+    },
+    {
+      field: "classes",
+      headerName: "Classes",
+      flex: 2,
+      valueGetter: (value, row) =>
+        row.classes.map((cls) => `${cls.section} (${cls.status})`).join(", "),
     },
     {
       field: "actions",
       headerName: "Actions",
-      flex: 1,
+      flex: 1.5,
       sortable: false,
       renderCell: (params) => (
         <Box sx={{ display: "flex", gap: 1 }}>
@@ -99,7 +108,7 @@ const FacultyManagement = () => {
             size="small"
             color="primary"
             startIcon={<EditIcon />}
-            onClick={() => handleEdit(params.row)}
+            onClick={() => handleEdit(params?.row)}
           >
             Edit
           </Button>
@@ -109,7 +118,7 @@ const FacultyManagement = () => {
             size="small"
             color="error"
             startIcon={<DeleteIcon />}
-            onClick={() => handleDelete(params.row)}
+            onClick={() => handleDelete(params?.row)}
           >
             Delete
           </Button>
@@ -131,7 +140,7 @@ const FacultyManagement = () => {
           }}
         >
           <Typography variant="h5" component="h1" sx={{ color: "white" }}>
-            Faculty Management
+            Year & Semester Management
           </Typography>
           <Button
             variant="contained"
@@ -139,29 +148,29 @@ const FacultyManagement = () => {
             onClick={handleCreate}
             color="success"
           >
-            Add Faculty
+            Add Year-Semester
           </Button>
         </Box>
 
         {/* DataGrid */}
         <DataGrid
-          rows={facultyList}
+          rows={yearSemestersList}
           columns={columns}
           loading={isLoading}
           pageSize={pageSize}
           onPageSizeChange={setPageSize}
           rowsPerPageOptions={[5, 10, 20]}
           pagination
-          getRowId={(row) => row._id}
+          getRowId={(row) => row?._id}
           disableSelectionOnClick
         />
 
-        {/* Create & Edit Dialogs */}
-        <CreateFaculty
+        <CreateYearSemester
           open={createDialogOpen}
           onClose={() => setCreateDialogOpen(false)}
         />
-        <EditFaculty
+
+        <EditYearSemester
           open={editDialogOpen}
           onClose={() => setEditDialogOpen(false)}
         />
@@ -174,13 +183,18 @@ const FacultyManagement = () => {
           <DialogTitle>Confirm Delete</DialogTitle>
           <DialogContent>
             Are you sure you want to delete{" "}
-            <b>{facultyToDelete?.name || "this faculty"}</b>?
+            <b>
+              {yearSemesterToDelete
+                ? `Year ${yearSemesterToDelete.year} - Sem ${yearSemesterToDelete.semester} (${yearSemesterToDelete.branch})`
+                : "this Year-Semester"}
+            </b>
+            ?
           </DialogContent>
           <DialogActions>
             <Button
               onClick={() => {
                 setDeleteDialogOpen(false);
-                setFacultyToDelete(null);
+                setYearSemesterToDelete(null);
               }}
             >
               Cancel
@@ -200,4 +214,4 @@ const FacultyManagement = () => {
   );
 };
 
-export default FacultyManagement;
+export default YearSemesterManagement;

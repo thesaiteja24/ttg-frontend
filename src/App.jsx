@@ -11,6 +11,8 @@ import Layout from "./components/Layout.jsx";
 import { Toaster } from "react-hot-toast";
 import FacultyManagement from "./pages/FacultyManagement.jsx";
 import { Helmet } from "react-helmet";
+import CourseManagement from "./pages/CourseManagement.jsx";
+import YearSemesterManagement from "./pages/YearSemesterManagement.jsx";
 
 export default function App() {
   return (
@@ -66,6 +68,12 @@ export default function App() {
 
           <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
             <Route path="/faculty" element={<FacultyManagement />} />
+          </Route>
+          <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
+            <Route path="/course" element={<CourseManagement />} />
+          </Route>
+          <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
+            <Route path="/year-semester" element={<YearSemesterManagement />} />
           </Route>
 
           {/* Unauthorized page */}

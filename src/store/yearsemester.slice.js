@@ -1,37 +1,38 @@
 import { create } from "zustand";
 import {
-  getAllFaculty,
-  createFaculty,
-  updateFaculty,
-  deleteFaculty,
-} from "../services/faculty.service";
+  createYearSemester,
+  deleteYearSemester,
+  getYearSemesters,
+  updateYearSemester,
+} from "../services/yearsemester.service";
 
 const initialState = {
-  facultyList: [],
+  yearSemestersList: [],
+  yearSemesters: [],
+  selectedYearSemester: null,
   isLoading: false,
   error: null,
-  selectedFaculty: null,
 };
 
-export const useFacultyStore = create((set) => ({
+export const useYearSemesterStore = create((set) => ({
   ...initialState,
 
-  getFaculty: async () => {
-    set({ isLoading: true, error: null });
+  getYearSemesters: async (isDropdown) => {
+    set({ isLoading: true });
 
     try {
-      const res = await getAllFaculty();
+      const res = await getYearSemesters(isDropdown);
 
       if (res.success) {
         set({
-          facultyList: res.data,
+          [isDropdown ? "yearSemesters" : "yearSemestersList"]: res.data,
           isLoading: false,
           error: null,
         });
       } else {
         set({
           isLoading: false,
-          error: res.message || "Failed to fetch faculty",
+          error: res.message || "Failed to fetch year-semesters.",
         });
       }
 
@@ -59,23 +60,23 @@ export const useFacultyStore = create((set) => ({
     }
   },
 
-  addFaculty: async (payload) => {
-    set({ isLoading: true, error: null });
+  addYearSemester: async (payload) => {
+    set({ isLoading: true });
 
     try {
-      const res = await createFaculty(payload);
+      const res = await createYearSemester(payload);
 
       if (res.success) {
-        // Add the new faculty to the list
         set((state) => ({
-          facultyList: [],
+          yearSemestersList: [],
+          yearSemesters: [],
           isLoading: false,
           error: null,
         }));
       } else {
         set({
           isLoading: false,
-          error: res.message || "Failed to create faculty",
+          error: res.message || "Failed to create year-semester.",
         });
       }
 
@@ -103,23 +104,23 @@ export const useFacultyStore = create((set) => ({
     }
   },
 
-  updateFaculty: async (payload) => {
-    set({ isLoading: true, error: null });
+  updateYearSemester: async (payload) => {
+    set({ isLoading: true });
 
     try {
-      const res = await updateFaculty(payload);
+      const res = await updateYearSemester(payload);
 
       if (res.success) {
-        // Update the faculty in the list
         set((state) => ({
-          facultyList: [],
+          yearSemestersList: [],
+          yearSemesters: [],
           isLoading: false,
           error: null,
         }));
       } else {
         set({
           isLoading: false,
-          error: res.message || "Failed to update faculty",
+          error: res.message || "Failed to update year-semester.",
         });
       }
 
@@ -147,20 +148,23 @@ export const useFacultyStore = create((set) => ({
     }
   },
 
-  deleteFaculty: async (id) => {
-    set({ isLoading: true, error: null });
+  deleteYearSemester: async (id) => {
+    set({ isLoading: true });
+
     try {
-      const res = await deleteFaculty(id);
+      const res = await deleteYearSemester(id);
+
       if (res.success) {
         set((state) => ({
-          facultyList: [],
+          yearSemestersList: [],
+          yearSemesters: [],
           isLoading: false,
           error: null,
         }));
       } else {
         set({
           isLoading: false,
-          error: res.message || "Failed to delete faculty",
+          error: res.message || "Failed to delete year-semester.",
         });
       }
 
@@ -188,8 +192,8 @@ export const useFacultyStore = create((set) => ({
     }
   },
 
-  setSelectedFaculty: (faculty) => {
-    set({ selectedFaculty: faculty });
+  setSelectedYearSemester: (yearSemester) => {
+    set({ selectedYearSemester: yearSemester });
   },
 
   reset: () => {
