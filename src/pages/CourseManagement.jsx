@@ -38,7 +38,6 @@ const CourseManagement = () => {
 
   useEffect(() => {
     if (courseList.length === 0) getCourses();
-    console.log("Course list data", courseList);
   }, [courseList, getCourses]);
 
   const handleCreate = () => setCreateDialogOpen(true);

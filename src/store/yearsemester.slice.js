@@ -2,6 +2,7 @@ import { create } from "zustand";
 import {
   createYearSemester,
   deleteYearSemester,
+  getClasses,
   getYearSemesters,
   updateYearSemester,
 } from "../services/yearsemester.service";
@@ -9,6 +10,7 @@ import {
 const initialState = {
   yearSemestersList: [],
   yearSemesters: [],
+  classesList: [],
   selectedYearSemester: null,
   isLoading: false,
   error: null,
@@ -33,6 +35,49 @@ export const useYearSemesterStore = create((set) => ({
         set({
           isLoading: false,
           error: res.message || "Failed to fetch year-semesters.",
+        });
+      }
+
+      return res;
+    } catch (err) {
+      let message;
+      if (err.message && err.errors?.length) {
+        message = err.message + ": " + err.errors.map((e) => e).join(", ");
+      } else if (err.message) {
+        message = err.message;
+      } else {
+        message = "Something went wrong";
+      }
+      const normalizedError = {
+        success: false,
+        message,
+      };
+
+      set({
+        error: normalizedError.message,
+        isLoading: false,
+      });
+
+      return normalizedError;
+    }
+  },
+
+  getClasses: async () => {
+    set({ isLoading: true });
+
+    try {
+      const res = await getClasses();
+
+      if (res.success) {
+        set({
+          classesList: res.data,
+          isLoading: false,
+          error: null,
+        });
+      } else {
+        set({
+          isLoading: false,
+          error: res.message || "Failed to fetch classes.",
         });
       }
 

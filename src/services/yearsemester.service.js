@@ -18,6 +18,20 @@ export const getYearSemesters = async (isDropdown) => {
   }
 };
 
+export const getClasses = async () => {
+  try {
+    const response = await api.get(`${year_semester_url}/classes`);
+    return handleApiResponse(response);
+  } catch (error) {
+    const errData = error.response?.data;
+    if (errData) return Promise.reject(errData);
+    return Promise.reject({
+      success: false,
+      message: error.message || "Network error",
+    });
+  }
+};
+
 export const createYearSemester = async (payload) => {
   try {
     const response = await api.post(year_semester_url, payload);

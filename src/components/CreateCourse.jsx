@@ -25,7 +25,7 @@ const createCourseSchema = z.object({
   courseId: z.string().min(3, "Course ID is required"),
   courseName: z.string().min(3, "Course name is required"),
   courseShortName: z.string().min(2, "Short name is required"),
-  credits: z
+  credits: z.coerce
     .number()
     .min(1, "Credits must be at least 1")
     .max(10, "Max 10 credits"),
@@ -39,7 +39,6 @@ const CreateCourse = ({ open, onClose }) => {
 
   useEffect(() => {
     if (yearSemesters.length === 0) getYearSemesters(true);
-    console.log("year-semesters List", yearSemestersList);
   }, [getYearSemesters]);
 
   const {

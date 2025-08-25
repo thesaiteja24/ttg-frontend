@@ -14,7 +14,7 @@ import { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useYearSemesterStore } from "../store/yearSemester.slice";
+import { useYearSemesterStore } from "../store/yearsemester.slice";
 import { toast } from "react-hot-toast";
 
 // Zod schema

@@ -19,6 +19,7 @@ import { toast } from "react-hot-toast";
 import { useYearSemesterStore } from "../store/yearsemester.slice";
 import CreateYearSemester from "../components/CreateYearSemester";
 import EditYearSemester from "../components/EditYearSemester";
+import { get } from "react-hook-form";
 
 const darkTheme = createTheme({
   palette: {
@@ -42,7 +43,9 @@ const YearSemesterManagement = () => {
   const [yearSemesterToDelete, setYearSemesterToDelete] = useState(null);
 
   useEffect(() => {
-    if (yearSemestersList.length === 0) getYearSemesters();
+    if (yearSemestersList.length === 0) {
+      getYearSemesters();
+    }
   }, [yearSemestersList, getYearSemesters]);
 
   const handleCreate = () => setCreateDialogOpen(true);
