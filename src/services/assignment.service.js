@@ -31,3 +31,31 @@ export const createAssignment = async (payload) => {
     });
   }
 };
+
+export const updateAssignment = async (payload) => {
+  try {
+    const response = await api.put(`${assignment_url}/${payload._id}`, payload);
+    return handleApiResponse(response);
+  } catch (error) {
+    const errData = error.response?.data;
+    if (errData) return Promise.reject(errData);
+    return Promise.reject({
+      success: false,
+      message: error.message || "Network error",
+    });
+  }
+};
+
+export const deleteAssignment = async (id) => {
+  try {
+    const response = await api.delete(`${assignment_url}/${id}`);
+    return handleApiResponse(response);
+  } catch (error) {
+    const errData = error.response?.data;
+    if (errData) return Promise.reject(errData);
+    return Promise.reject({
+      success: false,
+      message: error.message || "Network error",
+    });
+  }
+};
