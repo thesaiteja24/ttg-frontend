@@ -17,8 +17,9 @@ import DeleteIcon from "@mui/icons-material/Delete"; // use MUI’s delete icon
 import { useFacultyStore } from "../store/faculty.slice";
 import CreateFaculty from "../components/CreateFaculty";
 import EditFaculty from "../components/EdiFaculty";
-import { toast } from "react-hot-toast";
-import { set } from "zod";
+import { toast } from "react-hot-toast"
+import { CalendarIcon } from "lucide-react";
+import AvailabilityViewer from "../components/AvailabilityViewer";
 
 const darkTheme = createTheme({
   palette: {
@@ -39,6 +40,7 @@ const FacultyManagement = () => {
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [availabilityDialogoOpen, setAvailabilityDialogoOpen] = useState(false);
   const [facultyToDelete, setFacultyToDelete] = useState(null);
 
   useEffect(() => {
@@ -55,6 +57,11 @@ const FacultyManagement = () => {
   const handleDelete = (faculty) => {
     setFacultyToDelete(faculty);
     setDeleteDialogOpen(true);
+  };
+
+  const handleViewAvailability = (faculty) => {
+    setSelectedFaculty(faculty);
+    setAvailabilityDialogoOpen(true);
   };
 
   const confirmDelete = async () => {
@@ -79,7 +86,7 @@ const FacultyManagement = () => {
   };
 
   const columns = [
-    { field: "name", headerName: "Name", flex: 2 },
+    { field: "name", headerName: "Name", flex: 1 },
     {
       field: "phone",
       headerName: "Phone",
@@ -89,7 +96,7 @@ const FacultyManagement = () => {
     {
       field: "actions",
       headerName: "Actions",
-      flex: 1,
+      flex: 1.5,
       sortable: false,
       renderCell: (params) => (
         <Box sx={{ display: "flex", gap: 1 }}>
@@ -112,6 +119,16 @@ const FacultyManagement = () => {
             onClick={() => handleDelete(params.row)}
           >
             Delete
+          </Button>
+          <Button
+            sx={{ margin: "8px 12px" }}
+            variant="outlined"
+            size="small"
+            color="warning"
+            startIcon={<CalendarIcon />}
+            onClick={() => handleViewAvailability(params.row)}
+          >
+            View Availability
           </Button>
         </Box>
       ),
@@ -195,6 +212,13 @@ const FacultyManagement = () => {
             </Button>
           </DialogActions>
         </Dialog>
+
+        <AvailabilityViewer
+          open={availabilityDialogoOpen}
+          onClose={() =>
+
+            setAvailabilityDialogoOpen(false)}
+        />
       </Box>
     </ThemeProvider>
   );

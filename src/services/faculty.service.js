@@ -57,3 +57,17 @@ export const deleteFaculty = async (id) => {
     });
   }
 };
+
+export const getFacultyAvailability = async (id) => {
+  try {
+    const response = await api.get(`${facultyURl}/${id}/schedule`);
+    return handleApiResponse(response);
+  } catch (error) {
+    const errData = error.response?.data;
+    if (errData) return Promise.reject(errData);
+    return Promise.reject({
+      success: false,
+      message: error.message || "Network error",
+    });
+  }
+};

@@ -4,6 +4,7 @@ import {
   createFaculty,
   updateFaculty,
   deleteFaculty,
+  getFacultyAvailability,
 } from "../services/faculty.service";
 
 const initialState = {
@@ -11,6 +12,7 @@ const initialState = {
   isLoading: false,
   error: null,
   selectedFaculty: null,
+  facultyAvailability: null,
 };
 
 export const useFacultyStore = create((set) => ({
@@ -188,8 +190,51 @@ export const useFacultyStore = create((set) => ({
     }
   },
 
+  getFacultyAvailability: async (id) => {
+    set({ isLoading: true, error: null });
+
+    try {
+      const res = await getFacultyAvailability(id);
+
+      if (res.success) {
+        set({
+          facultyAvailability: res?.data?.matrix,
+          isLoading: false,
+          error: null,
+        });
+      } else {
+        set({
+          isLoading: false,
+          error: res.message || "Failed to fetch faculty",
+        });
+      }
+
+      return res;
+    } catch (err) {
+      let message;
+      if (err.message && err.errors?.length) {
+        message = err.message + ": " + err.errors.map((e) => e).join(", ");
+      } else if (err.message) {
+        message = err.message;
+      } else {
+        message = "Something went wrong";
+      }
+      const normalizedError = {
+        success: false,
+        message,
+      };
+
+      set({
+        error: normalizedError.message,
+        isLoading: false,
+      });
+
+      return normalizedError;
+    }
+  },
+
   setSelectedFaculty: (faculty) => {
-    set({ selectedFaculty: faculty });
+    set({ selectedFaculty: faculty, facultyAvailability: null });
   },
 
   reset: () => {
