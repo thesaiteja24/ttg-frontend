@@ -23,6 +23,7 @@ export const sidebarMenuConfig = {
     { label: "Faculty Management", icon: Users2Icon, path: "/faculty" },
     { label: "Course Management", icon: Book, path: "/course" },
     { label: "Assignment", icon: Link, path: "/assignment" },
+    { label: "Time Table", icon: ClipboardList, path: "/timetable" },
   ],
   student: [
     { label: "Dashboard", icon: LayoutDashboard, path: "/dashboard" },

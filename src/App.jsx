@@ -14,6 +14,7 @@ import { Helmet } from "react-helmet";
 import CourseManagement from "./pages/CourseManagement.jsx";
 import YearSemesterManagement from "./pages/YearSemesterManagement.jsx";
 import AssignmentManagement from "./pages/AssignmentManagement.jsx";
+import TimeTableManagement from "./pages/TimeTableManagement.jsx";
 
 export default function App() {
   return (
@@ -79,6 +80,10 @@ export default function App() {
           <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
             <Route path="/assignment" element={<AssignmentManagement />} />
           </Route>
+          <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
+            <Route path="/timetable" element={<TimeTableManagement />} />
+          </Route>
+          
 
           {/* Unauthorized page */}
           <Route path="/unauthorized" element={<Unauthorized />} />
