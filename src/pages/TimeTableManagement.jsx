@@ -49,11 +49,47 @@ const TimeTableManagement = () => {
     return [...new Set(sections)];
   }, [selectedYS, classesList]);
 
+  // Generate timetable
+  const generateTimetable = async () => {
+    try {
+      setIsLoading(true);
+      toast.loading("Generating timetable...", { id: "gen" });
+
+      const res = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/timetable`
+      );
+
+      if (res.data?.success) {
+        toast.success("Timetable generation started successfully!", {
+          id: "gen",
+        });
+        // Optionally refetch after success
+        await fetchTimetable(selectedYS);
+      } else {
+        toast.error(res.data?.message || "Failed to generate timetable", {
+          id: "gen",
+        });
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error(
+        err.response?.data?.message || "Timetable generation failed",
+        {
+          id: "gen",
+        }
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   // fetch timetable from backend
   const fetchTimetable = async (yearSemesterId) => {
     try {
       setIsLoading(true);
-      const res = await axios.get(`http://localhost:9999/api/v1/timetable/${yearSemesterId}`);
+      const res = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/timetable/${yearSemesterId}`
+      );
       if (res.data?.success) {
         setTimetableData(res.data.data || {});
         toast.success("Timetable fetched successfully");
@@ -108,8 +144,8 @@ const TimeTableManagement = () => {
           </Typography>
         </Box>
 
-        {/* Filters */}
-        <Box sx={{ display: "flex", gap: 2, mb: 2 }}>
+        {/* Filters + Generate button */}
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
           <FormControl fullWidth>
             <InputLabel>Year & Semester</InputLabel>
             <Select
@@ -141,6 +177,21 @@ const TimeTableManagement = () => {
               ))}
             </Select>
           </FormControl>
+
+          <Button
+            fullWidth
+            variant="contained"
+            color="success"
+            disabled={isLoading}
+            onClick={generateTimetable}
+            sx={{ whiteSpace: "nowrap", height: "56px" }}
+          >
+            {isLoading ? (
+              <CircularProgress size={20} color="inherit" />
+            ) : (
+              "Generate Timetable"
+            )}
+          </Button>
         </Box>
 
         {/* Loading */}
